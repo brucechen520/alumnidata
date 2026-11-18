@@ -28,7 +28,7 @@
             <b-nav-item-dropdown :text="users.name" v-if="users.name !=='訪客'">
               <b-nav-item href="https://etouch.ee.fcu.edu.tw/ee/logout.php">登出</b-nav-item>
             </b-nav-item-dropdown>
-            <b-nav-item v-if="users.name =='訪客'" href="#" @click="login">§ 登入</b-nav-item>
+            <b-nav-item v-if="users.name =='訪客'" href="https://etouch.ee.fcu.edu.tw/ee/index.php">§ 登入</b-nav-item>
           </b-navbar-nav>
             </div>
         </nav>
@@ -67,12 +67,6 @@
           }
       },
       methods:{
-        login(){
-          this.$store.dispatch('action_login').then(() =>{
-            this.$store.dispatch('action_user_get');
-          })
-          
-        },
         closenav(){
           $('#myNavbar').collapse('hide')
         },

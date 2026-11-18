@@ -326,18 +326,6 @@ export const action_resume_get  = ({ commit }, param) => {
         });       
     });            
 }
-export const action_login  = ({ commit }, param) => {
-    return new Promise((resolve, reject) => {
-        api2.login(param,function(result){
-            if(result.code == 'success'){
-                window.$cookies.set("auth", result.data);
-                resolve(result);
-            }
-        }, false, function(error){                
-            resolve("failed");                
-        });       
-    });            
-}
 export const action_user_get  = ({ commit }, param) => {
     return new Promise((resolve, reject) => {
         api2.user_get(param,function(result){
