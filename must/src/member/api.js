@@ -29,3 +29,20 @@ export const memberApi = {
   mdcard: () => http.get('api_mem_mdcard.php'),
   mdcardAction: payload => http.post('api_mem_mdcard.php', payload)
 };
+
+// 後台管理（issue 006）：全部需管理員，寫入帶 CSRF（http 層自動帶 X-XSRF-TOKEN）
+export const adminApi = {
+  mailSingle: formData => http.post('api_admin_mail_single.php', formData),
+  mailRecipients: sort => http.get('api_admin_mail.php', { params: sort ? { sort } : {} }),
+  mailSend: formData => http.post('api_admin_mail.php', formData, { timeout: 0 }),
+  mailJob: jobId => http.get('api_admin_mail.php', { params: { jobId } }),
+  postMessage: (topic, content) => http.post('api_admin_messages.php', { topic, content }),
+  members: sort => http.get('api_admin_members.php', { params: sort ? { sort } : {} }),
+  setConfirm: changes => http.post('api_admin_members.php', { changes }),
+  marquee: () => http.get('api_admin_marquee.php'),
+  setMarquee: marquee => http.post('api_admin_marquee.php', { marquee }),
+  changeLog: () => http.get('api_admin_changelog.php'),
+  files: () => http.get('api_admin_files.php'),
+  uploadFile: formData => http.post('api_admin_files.php', formData),
+  sqlCheck: t => http.get('api_admin_sqlcheck.php', { params: { t } })
+};

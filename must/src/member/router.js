@@ -10,6 +10,15 @@ import Profile from './views/Profile.vue';
 import Statistics from './views/Statistics.vue';
 import Board from './views/Board.vue';
 import Instruction from './views/Instruction.vue';
+import AdminFrame from './views/admin/AdminFrame.vue';
+import MailSingle from './views/admin/MailSingle.vue';
+import MailGroup from './views/admin/MailGroup.vue';
+import MessagePost from './views/admin/MessagePost.vue';
+import ConfirmMembers from './views/admin/ConfirmMembers.vue';
+import MarqueeSet from './views/admin/MarqueeSet.vue';
+import ChangeLog from './views/admin/ChangeLog.vue';
+import UpdateFile from './views/admin/UpdateFile.vue';
+import SqlCheck from './views/admin/SqlCheck.vue';
 
 Vue.use(VueRouter);
 
@@ -27,6 +36,19 @@ export default new VueRouter({
     { path: '/statistics', component: Statistics },
     { path: '/board', component: Board },
     { path: '/instruction', component: Instruction },
+    // 後台管理（issue 006）：外層元件在非管理員時只顯示權限不足，不載入任何子頁
+    {
+      path: '/admin', component: AdminFrame, children: [
+        { path: 'mail-single', component: MailSingle },
+        { path: 'mail', component: MailGroup },
+        { path: 'message-post', component: MessagePost },
+        { path: 'confirm', component: ConfirmMembers },
+        { path: 'marquee', component: MarqueeSet },
+        { path: 'change-log', component: ChangeLog },
+        { path: 'update-file', component: UpdateFile },
+        { path: 'sql-check', component: SqlCheck }
+      ]
+    },
     { path: '*', redirect: '/' }
   ]
 });
