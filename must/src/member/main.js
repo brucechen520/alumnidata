@@ -1,13 +1,18 @@
 import Vue from 'vue';
-import { ready } from '../shared/http';
+import App from './App.vue';
+import router from './router';
+import { ready } from './api';
 
-ready().catch(() => {});
+// 舊會員系統的樣式與圖片沿用原檔（與 login.html 一樣在執行時載入同源檔案）
+['/ee/css/mysy.css', '/ee/css/visual4tab.css', '/ee/css/gmail.css'].forEach(href => {
+  const link = document.createElement('link');
+  link.rel = 'stylesheet';
+  link.href = href;
+  document.head.appendChild(link);
+});
 
-new Vue({
-  el: '#app',
-  render: h => h('main', [
-    h('h1', '會員系統'),
-    h('p', '會員系統首頁建置中。'),
-    h('a', { attrs: { href: '/ee/main.php' } }, '進入目前會員系統')
-  ])
+Vue.config.ignoredElements = ['marquee'];
+
+ready().catch(() => {}).then(() => {
+  new Vue({ el: '#app', router, render: h => h(App) });
 });
