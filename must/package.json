@@ -35,7 +35,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "node dev-server.js",
     "dev:parcel-only": "parcel index.html",
-    "build": "parcel build index.html --public-url ./"
+    "build": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\" && parcel build index.html login.html member.html --out-dir dist --public-url /ee/Frontend/ --no-source-maps",
+    "deploy:stage": "node stage-build.js"
   },
   "keywords": [],
   "author": "",
