@@ -1,7 +1,8 @@
 import axios from 'axios'
 export const api2 = {
     $http: axios,
-    API_HOST: window.location.hostname == 'localhost' ? 'http://140.134.28.2' : '',
+    // 一律呼叫同源的 /ee/api/（issue 003：API 不再允許跨網域）。本機開發由 dev-server.js 代理轉發
+    API_HOST: '',
     init: function(){
         this.$http.defaults.headers = { 'Content-Type': 'application/json'}
     },
