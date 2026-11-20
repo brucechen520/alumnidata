@@ -11,7 +11,7 @@
 <script>
   import { api2 } from '../../assets/api.js'
 	import { mapState, mapGetters, mapActions } from 'vuex';  
-  import * as api from '../lib/api';
+  import * as api from '../../industry/api';
     export default {
       props: ['selectType'],
       created () {

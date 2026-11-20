@@ -28,7 +28,7 @@
 
 <script>
     import { mapGetters, mapActions } from 'vuex'
-    import * as api from '../lib/api';
+    import * as api from '../../industry/api';
     import DatePicker from 'vue2-datepicker' 
     export default {
         data () {

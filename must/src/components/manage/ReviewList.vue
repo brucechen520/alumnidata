@@ -101,7 +101,7 @@
 </template>
 
 <script>
-    import * as api from '../lib/api.js';
+    import * as api from '../../industry/api';
     import { api2 } from '../../assets/api.js'
     import { mapState, mapGetters, mapActions } from 'vuex';
     import CasePage from '../job-query/CasePage.vue';

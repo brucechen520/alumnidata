@@ -91,7 +91,7 @@
 <script>
     import { mapState, mapGetters, mapActions } from 'vuex';
     import webTable from '../tables/webTable.vue'
-    import * as api from '../lib/api';
+    import * as api from '../../industry/api';
     export default {
         components: {
             webTable,

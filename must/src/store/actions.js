@@ -3,7 +3,7 @@ import mutations from './mutations'
 import { api2 } from '../assets/api.js'
 // 引入 mutations_type （引用同一個 key）
 import * as types from './mutations_type.js';
-import { getUserData } from '../components/lib/api';
+import { getUserData } from '../industry/api';
 export const acceptUser  = ({ commit }, data) => {
     
     getUserData('/ee/api/api_user.php', data)

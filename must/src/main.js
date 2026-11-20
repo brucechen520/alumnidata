@@ -2,9 +2,7 @@ import Vue from 'vue';
 import App from './App.vue';
 import store from './store';
 import router from './router';
-import axios from 'axios'
-import VueAxios from 'vue-axios'
-import api from './components/lib/api'
+import { setRequestContext } from './industry/api'
 import { ValidationObserver, ValidationProvider, extend } from 'vee-validate';
 import { required, email } from 'vee-validate/dist/rules';
 import zh_TW from 'vee-validate/dist/locale/zh_TW';
@@ -41,11 +39,11 @@ extend('required', {
 Vue.component('ValidationProvider', ValidationProvider);
 Vue.component('ValidationObserver', ValidationObserver);
 
-Vue.use(VueAxios, axios)
 Vue.use(AppPlugin)
+const identity = store.dispatch('action_user_get');
+setRequestContext(identity, () => router.currentRoute.path);
 new Vue({
   el: '#app',
-  api,
   router,
   store,
   jquery,

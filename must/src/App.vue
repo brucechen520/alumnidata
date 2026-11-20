@@ -26,9 +26,9 @@
           </b-navbar-nav>
           <b-navbar-nav class="ml-auto">
             <b-nav-item-dropdown :text="users.name" v-if="users.name !=='訪客'">
-              <b-nav-item href="https://etouch.ee.fcu.edu.tw/ee/logout.php">登出</b-nav-item>
+              <b-nav-item @click="logout">登出</b-nav-item>
             </b-nav-item-dropdown>
-            <b-nav-item v-if="users.name =='訪客'" href="https://etouch.ee.fcu.edu.tw/ee/index.php">§ 登入</b-nav-item>
+            <b-nav-item v-if="users.name =='訪客'" href="/ee/index.php">§ 登入</b-nav-item>
           </b-navbar-nav>
             </div>
         </nav>
@@ -41,7 +41,7 @@
 </template>
 
 <script>
-    import Vue from 'vue';
+    import { logout } from './industry/api';
     import { mapGetters, mapActions } from 'vuex'
     import commonAlert from './components/common/alert.vue'
     import navItem from './assets/navbar.json';
@@ -50,9 +50,6 @@
         return{
           sbVisable:true,
         }},
-      created () {
-          this.$store.dispatch('action_user_get');
-      },
       computed: {
           ...mapGetters({
               users: 'getUser'
@@ -67,6 +64,7 @@
           }
       },
       methods:{
+        logout,
         closenav(){
           $('#myNavbar').collapse('hide')
         },
