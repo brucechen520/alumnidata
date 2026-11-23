@@ -3,8 +3,6 @@ import Router from 'vue-router'
 import home from '../components/others/Home.vue/'
 import WebsiteFilling from '../components/website/WebsiteFilling'
 import WebsiteQuery from '../components/website/WebsiteQuery'
-import JobVacancies from '../components/job-matching/JobVacancies'
-import ProjectFilling from '../components/job-matching/ProjectFilling'
 import personalSkill from '../components/personal/SkillFilling'
 import JobQuery from '../components/job-query/JobQuery'
 import FindMan from '../components/job-query/FindMan'
@@ -46,17 +44,6 @@ const router = new Router({
             path: '/products',
             name: 'products',
             component: products
-        },
-        {
-            path: '/JobVacancies',
-            name: 'JobVacancies',
-            alias: 'JobVacancies',
-            component: JobVacancies      
-        },
-        {
-            path: '/ProjectFilling',
-            name: 'ProjectFilling',
-            component: ProjectFilling
         },
         {
             path: '/SkillFilling',
