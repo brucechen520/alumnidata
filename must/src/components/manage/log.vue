@@ -46,7 +46,9 @@
         created () {
             let self = this;
             this.action_actionlog_get({Mem_Se:self.users.id}).then(function(result){
-                self.logData = result.data.list;
+                if (result && result.code === 'success' && Array.isArray(result.data && result.data.list)) {
+                    self.logData = result.data.list;
+                }
                 //self.website_sets = [...self.stateWebData.list];
             });
         },

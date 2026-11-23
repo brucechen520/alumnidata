@@ -282,9 +282,7 @@ export const action_web_delete  = ({ commit }, param) => {
 export const action_actionlog_get  = ({ commit }, param) => {
     return new Promise((resolve, reject) => {
         api2.actionlog_get(param,function(result){
-            if(result.code == 'success'){
-                resolve(result);
-            }
+            resolve(result);
         }, false, function(error){                
             resolve("failed");                
         });       
