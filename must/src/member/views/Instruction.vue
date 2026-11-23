@@ -22,7 +22,7 @@
 <p>請連結 :
   <li><a href="http://etouch.ee.fcu.edu.tw/wordpress/">http://etouch.ee.fcu.edu.tw/wordpress/</a> (由賴一甫學長 建立及維護)</li>
   <li><a href="https://www.facebook.com/groups/348958375118005">Facebook 逢甲大學電機系系友 線上聯誼會</a></li>
-  <li>逢甲電機系系友會會員系統 <a href="http://etouch.ee.fcu.edu.tw/ee/index.php">http://etouch.ee.fcu.edu.tw/ee/index.php</a></li>
+  <li>逢甲電機系系友會會員系統 <a href="https://etouch.ee.fcu.edu.tw/ee/">https://etouch.ee.fcu.edu.tw/ee/</a></li>
   <li>Line群組  <b>“溫馨的逢甲電機系系友大家庭”</b>,請聯絡 貴班聯絡人, 或您認識的</li>
 系友來幫忙加入
 <p>學校相關官網 聯結: (由學校管理維護, 常有無法連結現象)</p>
