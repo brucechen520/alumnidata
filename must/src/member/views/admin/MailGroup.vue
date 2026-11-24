@@ -53,7 +53,7 @@
               <td><span v-if="!byLogin" class="level" @click="toggleLevel(r.level)">{{ r.level }}</span><template v-else>{{ r.level }}</template></td>
               <td>{{ r.name }}</td>
               <td><a :href="'http://www.facebook.com/' + r.fbId" target="_blank" rel="noopener">{{ r.fbName }}</a></td>
-              <td :style="{ background: isChecked(r) ? '#9999FF' : 'white' }"><label><input v-model="selected" type="checkbox" :value="r.no">{{ r.email }}</label></td>
+              <td :class="{ invalid: !r.emailValid, checked: isChecked(r) }"><label><input v-model="selected" type="checkbox" :value="r.no" :disabled="!r.emailValid">{{ r.email }}</label> <strong v-if="!r.emailValid">信箱格式錯誤</strong></td>
               <td>{{ r.createTime ? date(r.createTime) : '' }}</td>
               <td>{{ r.loginTime ? time(r.loginTime) : '' }}</td>
               <td>{{ r.confirmDesc }}</td>
@@ -63,7 +63,7 @@
         <input type="button" value="送出" :disabled="busy" @click="send">
         ({{ selectedCount }})
         <input type="button" value="清除" @click="selected = []">
-        <input type="button" value="全選" @click="selected = recipients.map(r => r.no)">
+        <input type="button" value="全選" @click="selected = recipients.filter(r => r.emailValid).map(r => r.no)">
         夾帶檔案
         <input ref="file" type="file" @change="file = $event.target.files[0] || null">選擇檔案後請等待上傳完成(出現檔名)
         <p v-if="busy">寄送中，請勿關閉或重新整理頁面……</p>
@@ -107,7 +107,7 @@ export default {
     toggleSort() { this.byLogin = !this.byLogin; this.result = null; this.file = null; this.load(); },
     toggleLevel(level) {
       // 與舊頁面相同：該級別尚未全選就全選，已全選則全部取消
-      const nos = this.recipients.filter(r => r.level === level).map(r => r.no);
+      const nos = this.recipients.filter(r => r.level === level && r.emailValid).map(r => r.no);
       const all = nos.every(n => this.selected.indexOf(n) !== -1);
       this.selected = this.selected.filter(n => nos.indexOf(n) === -1).concat(all ? [] : nos);
     },
@@ -147,5 +147,7 @@ export default {
 .sexyborder { border: 1px solid #0066cc; padding: 5px; border-radius: 5px; }
 .pos_fixed { background-color: rgba(255, 0, 255, .5); position: fixed; bottom: 50px; right: 10px; font-size: 36px; }
 .level { cursor: pointer; }
+.invalid { background: #fff0f0; color: #a40000; }
+.checked { background: #9999ff; }
 .result td { padding: 2px 8px; }
 </style>
