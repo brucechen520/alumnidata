@@ -36,6 +36,11 @@
           </tr>
         </table>
         <p v-if="result.unknown">結果未明的批次可能已經寄出（BCC 信件的收件人欄為系友會信箱，請至該信箱核對），系統不會自動重送，也不會繼續寄送其後尚未寄出的批次。請核對後按「重新開始（新的提交）」，只勾選確定尚未收到的收件人。</p>
+        <div v-if="Array.isArray(result.skipped) && result.skipped.length">
+          <p>以下 {{ result.skipped.length }} 位信箱格式錯誤，未寄送：</p>
+          <ul><li v-for="email in result.skipped" :key="email">{{ email }}</li></ul>
+        </div>
+        <p v-if="!Array.isArray(result.skipped)">查詢結果不包含格式錯誤而被跳過的信箱，請核對原收件人清單。</p>
         <p>提交識別：{{ result.jobId }}</p>
         <p>
           <input v-if="!result.complete && !result.unknown && (result.failed || result.pending)" type="button" value="重送未完成的批次" :disabled="busy" @click="send">
