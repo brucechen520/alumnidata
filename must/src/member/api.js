@@ -36,6 +36,12 @@ export const adminApi = {
   mailRecipients: sort => http.get('api_admin_mail.php', { params: sort ? { sort } : {} }),
   mailSend: formData => http.post('api_admin_mail.php', formData, { timeout: 0 }),
   mailJob: jobId => http.get('api_admin_mail.php', { params: { jobId } }),
+  // 寄信功能（非同步群發，issue 016）
+  mailJobRecipients: sort => http.get('api_admin_mail_jobs.php', { params: sort ? { action: 'recipients', sort } : { action: 'recipients' } }),
+  mailJobs: () => http.get('api_admin_mail_jobs.php', { params: { jobs: 1 } }),
+  mailJobDetail: job => http.get('api_admin_mail_jobs.php', { params: { job } }),
+  mailJobCreate: formData => http.post('api_admin_mail_jobs.php', formData),
+  mailJobAction: (action, jobKey) => http.post('api_admin_mail_jobs.php', { action, jobKey }),
   postMessage: (topic, content) => http.post('api_admin_messages.php', { topic, content }),
   members: sort => http.get('api_admin_members.php', { params: sort ? { sort } : {} }),
   setConfirm: changes => http.post('api_admin_members.php', { changes }),

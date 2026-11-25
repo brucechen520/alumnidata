@@ -13,6 +13,9 @@ import Instruction from './views/Instruction.vue';
 import AdminFrame from './views/admin/AdminFrame.vue';
 import MailSingle from './views/admin/MailSingle.vue';
 import MailGroup from './views/admin/MailGroup.vue';
+import MailJobs from './views/admin/MailJobs.vue';
+import MailJobNew from './views/admin/MailJobNew.vue';
+import MailJobDetail from './views/admin/MailJobDetail.vue';
 import MessagePost from './views/admin/MessagePost.vue';
 import ConfirmMembers from './views/admin/ConfirmMembers.vue';
 import MarqueeSet from './views/admin/MarqueeSet.vue';
@@ -41,6 +44,10 @@ export default new VueRouter({
       path: '/admin', component: AdminFrame, children: [
         { path: 'mail-single', component: MailSingle },
         { path: 'mail', component: MailGroup },
+        // 寄信功能（issue 016）：寄件記錄 → 建立新寄信／任務詳情
+        { path: 'mail-jobs', component: MailJobs },
+        { path: 'mail-jobs/new', component: MailJobNew },
+        { path: 'mail-jobs/:key', component: MailJobDetail },
         { path: 'message-post', component: MessagePost },
         { path: 'confirm', component: ConfirmMembers },
         { path: 'marquee', component: MarqueeSet },
