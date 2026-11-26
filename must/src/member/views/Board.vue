@@ -66,19 +66,19 @@ export default {
     async run(payload, done) {
       this.busy = true;
       try { await memberApi.mdcardAction(payload); if (done) done(); await this.load(); }
-      catch (error) { alert(errorText(error, '操作失敗，請稍後再試。')); }
+      catch (error) { await this.$dialog.alert(errorText(error, '操作失敗，請稍後再試。')); }
       finally { this.busy = false; }
     },
     reset() { this.topic = '標題'; this.content = '你想說什麼?'; },
-    post() {
+    async post() {
       // 訊息與舊頁面 check() 相同
-      if (this.topic === '') { alert('未輸入主題'); return; }
-      if (this.content === '') { alert('未輸入內容'); return; }
+      if (this.topic === '') { await this.$dialog.alert('未輸入主題'); return; }
+      if (this.content === '') { await this.$dialog.alert('未輸入內容'); return; }
       this.run({ action: 'post', topic: this.topic, content: this.content }, this.reset);
     },
-    reply(t) {
+    async reply(t) {
       const content = this.replies[t.id] || '';
-      if (content.trim() === '') { alert('未輸入內容'); return; }
+      if (content.trim() === '') { await this.$dialog.alert('未輸入內容'); return; }
       this.run({ action: 'reply', mdId: t.id, content }, () => { this.$set(this.replies, t.id, ''); });
     },
     removeTopic(t) { this.run({ action: 'deleteTopic', mdId: t.id }); },

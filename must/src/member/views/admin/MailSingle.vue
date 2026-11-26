@@ -50,9 +50,9 @@ export default {
     },
     async send() {
       // 檢查順序與訊息和舊頁面 check() 相同
-      if (this.email === '') { alert('未輸入信箱'); return; }
-      if (this.topic === '') { alert('未輸入主題'); return; }
-      if (this.content === '') { alert('未輸入內容'); return; }
+      if (this.email === '') { await this.$dialog.alert('未輸入信箱'); return; }
+      if (this.topic === '') { await this.$dialog.alert('未輸入主題'); return; }
+      if (this.content === '') { await this.$dialog.alert('未輸入內容'); return; }
       const data = new FormData();
       data.append('recipient', this.recipient);
       data.append('email', this.email);
@@ -63,10 +63,10 @@ export default {
       this.busy = true;
       try {
         await adminApi.mailSingle(data);
-        alert('Mail were Sent!');
+        await this.$dialog.alert('Mail were Sent!');
         this.$router.push('/');
       } catch (error) {
-        alert(errorText(error, '寄信失敗，請稍後再試。'));
+        await this.$dialog.alert(errorText(error, '寄信失敗，請稍後再試。'));
       } finally { this.busy = false; }
     }
   }

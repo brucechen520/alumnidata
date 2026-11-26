@@ -17,7 +17,7 @@ export default {
   data() { return { text: '', busy: false }; },
   async created() {
     try { this.text = (await adminApi.marquee()).data.marquee; }
-    catch (error) { alert(errorText(error, '無法讀取跑馬燈。')); }
+    catch (error) { await this.$dialog.alert(errorText(error, '無法讀取跑馬燈。')); }
   },
   methods: {
     async save() {
@@ -25,9 +25,9 @@ export default {
       try {
         await adminApi.setMarquee(this.text);
         this.shell.marquee = this.text; // 外框立即顯示新內容
-        alert('OK');
+        await this.$dialog.alert('OK');
         this.$router.push('/');
-      } catch (error) { alert(errorText(error, '設定失敗，請稍後再試。')); }
+      } catch (error) { await this.$dialog.alert(errorText(error, '設定失敗，請稍後再試。')); }
       finally { this.busy = false; }
     }
   }

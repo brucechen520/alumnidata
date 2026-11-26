@@ -1,5 +1,6 @@
 import qs from 'qs';
 import { http, errorMessage } from '../shared/http';
+import { dialog } from '../shared/dialog';
 
 let identity = Promise.resolve(null);
 let currentPath = () => '';
@@ -34,7 +35,7 @@ export function request(method, url, data, config) {
         window.location.href = '/ee/index.php';
       }
     } else if (status === 403) {
-      window.alert(errorMessage(error, '權限不足'));
+      await dialog.alert(errorMessage(error, '權限不足'));
     }
     throw error;
   });

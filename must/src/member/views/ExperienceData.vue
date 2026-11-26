@@ -35,9 +35,9 @@ export default {
       this.busy = true;
       try {
         await memberApi.saveExperience({ shareOpen: this.form.shareOpen, experience: this.form.experience });
-        alert('填寫成功');
+        await this.$dialog.alert('填寫成功');
         this.$router.push('/');
-      } catch (error) { alert(errorText(error, '資料儲存失敗，請稍後再試。')); }
+      } catch (error) { await this.$dialog.alert(errorText(error, '資料儲存失敗，請稍後再試。')); }
       finally { this.busy = false; }
     }
   }

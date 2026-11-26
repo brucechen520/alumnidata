@@ -18,7 +18,7 @@ export default {
   data() { return { files: [], busy: false }; },
   async created() {
     try { this.files = (await adminApi.files()).data.files; }
-    catch (error) { alert(errorText(error, '無法讀取檔案清單。')); }
+    catch (error) { await this.$dialog.alert(errorText(error, '無法讀取檔案清單。')); }
   },
   methods: {
     async submit() {
@@ -35,7 +35,7 @@ export default {
         catch (error) { messages.push(f.label + '：' + errorText(error, '上傳失敗')); }
       }
       this.busy = false;
-      alert(messages.length ? messages.join('\n') : '未選擇檔案');
+      await this.$dialog.alert(messages.length ? messages.join('\n') : '未選擇檔案');
       if (messages.length) this.$router.push('/');
     }
   }

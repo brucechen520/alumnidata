@@ -69,7 +69,7 @@ export default {
       if (!changes.length) return;
       this.busy = true;
       try { await adminApi.setConfirm(changes); await this.load(); }
-      catch (error) { alert(errorText(error, '更新權限失敗，請稍後再試。')); }
+      catch (error) { await this.$dialog.alert(errorText(error, '更新權限失敗，請稍後再試。')); }
       finally { this.busy = false; }
     }
   }

@@ -90,27 +90,27 @@ export default {
       this.busy = true;
       try {
         await adminApi.mailJobAction(action, this.job.jobKey);
-        if (okText) alert(okText);
+        if (okText) await this.$dialog.alert(okText);
       } catch (error) {
-        alert(errorText(error, '操作失敗，請稍後再試。'));
+        await this.$dialog.alert(errorText(error, '操作失敗，請稍後再試。'));
       } finally {
         this.busy = false;
         await this.load();
       }
     },
-    cancel() {
+    async cancel() {
       const c = this.job.counts;
       const msg = '將取消尚未寄送的 ' + c.pending + ' 位，已寄出的 ' + c.sent + ' 位不受影響'
         + '（若剛好有 1 封正在寄送中，仍可能寄出）。確定要停止寄信嗎？';
-      if (confirm(msg)) this.act('cancel', '已停止寄信。');
+      if (await this.$dialog.confirm(msg, { danger: true, okText: '停止寄信' })) await this.act('cancel', '已停止寄信。');
     },
-    requeue() {
+    async requeue() {
       const msg = '將重新排入 ' + this.job.counts.failed + ' 位失敗的收件人，由背景排程依額度寄出'
         + (this.job.attachmentName ? '（會附上原附件）' : '') + '。確定嗎？';
-      if (confirm(msg)) this.act('requeue_failed', '已重新排入。');
+      if (await this.$dialog.confirm(msg)) await this.act('requeue_failed', '已重新排入。');
     },
-    abandon() {
-      if (confirm('放棄後將清除這個任務的附件檔，之後無法再重新排入失敗收件人。確定放棄嗎？')) this.act('abandon_failed', '已放棄重排並清除附件。');
+    async abandon() {
+      if (await this.$dialog.confirm('放棄後將清除這個任務的附件檔，之後無法再重新排入失敗收件人。確定放棄嗎？', { danger: true, okText: '放棄重排' })) await this.act('abandon_failed', '已放棄重排並清除附件。');
     }
   }
 };

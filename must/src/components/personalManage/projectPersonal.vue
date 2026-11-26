@@ -51,6 +51,7 @@
 </template>
 
 <script>
+import { dialog } from '../../shared/dialog';
     import { mapGetters, mapActions } from 'vuex'
     import * as api from '../lib/api';
     export default {
@@ -110,7 +111,7 @@
                 }
             },
             validateForm () {
-                this.$validator.validateAll().then((result) => {
+                this.$validator.validateAll().then(async (result) => {
                     if (result) {
                         api.getData('/ee/api/api_skill.php', {
                             params: {
@@ -118,20 +119,20 @@
                                 data: this.skill_data
                             }
                         })
-                        .then(function (user) {
+                        .then(async function (user) {
                             console.log(user);
                             if(user.success)
-                                alert(user.success);
+                                await dialog.alert(user.success);
                             else
-                                alert(user.error);
+                                await dialog.alert(user.error);
                         })
-                        .catch(function (error) {
-                            alert(error);
+                        .catch(async function (error) {
+                            await dialog.alert(error);
                         })
                         return;
                     }
                     else
-                        alert('Correct them errors!'); 
+                        await dialog.alert('Correct them errors!');
                 })
             }
 

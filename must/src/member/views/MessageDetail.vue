@@ -28,10 +28,10 @@ export default {
   methods: {
     format: formatTime,
     async remove() {
-      if (!confirm('此動作無法復原，確定嗎?')) return;
+      if (!(await this.$dialog.confirm('此動作無法復原，確定嗎?', { danger: true, okText: '刪除' }))) return;
       this.busy = true;
       try { await memberApi.deleteMessage(this.message.id); this.$router.push('/'); }
-      catch (error) { alert(errorText(error, '刪除失敗，請稍後再試。')); }
+      catch (error) { await this.$dialog.alert(errorText(error, '刪除失敗，請稍後再試。')); }
       finally { this.busy = false; }
     }
   }

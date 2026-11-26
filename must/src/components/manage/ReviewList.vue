@@ -101,6 +101,7 @@
 </template>
 
 <script>
+import { dialog } from '../../shared/dialog';
     import * as api from '../../industry/api';
     import { api2 } from '../../assets/api.js'
     import { mapState, mapGetters, mapActions } from 'vuex';
@@ -249,8 +250,8 @@
               'creater': item.M_Name,
               'project_Name' : item.project_Name
             }
-            _this.action_project_comfirm(param).then(function(result){
-                alert('成功');
+            _this.action_project_comfirm(param).then(async function(result){
+                await dialog.alert('成功');
                 _this.action_project_get({status:_this.tab});
             });
           } else{
@@ -261,8 +262,8 @@
               'creater': item.M_Name,
               'vacancy_Name' : item.vacancy_Name
             }
-            _this.action_vacancy_comfirm(param).then(function(result){
-                alert('成功');
+            _this.action_vacancy_comfirm(param).then(async function(result){
+                await dialog.alert('成功');
                 _this.action_vacancy_get({status:_this.tab});
             });
           }
@@ -270,8 +271,8 @@
         },
         updateWeb(param){
           var _this = this;
-          this.action_web_comfirm(param).then(function(result){
-                alert('成功');
+          this.action_web_comfirm(param).then(async function(result){
+                await dialog.alert('成功');
                 _this.action_web_get({status:_this.tab});
             });
         },

@@ -51,6 +51,7 @@
 </template>
 
 <script>
+import { dialog } from '../../shared/dialog';
     import { mapGetters, mapActions } from 'vuex'
     import * as api from '../../industry/api';
     export default { 
@@ -116,15 +117,15 @@
                     methods: 'select'
                   }
                 })
-                  .then(function (data) {
+                  .then(async function (data) {
                       console.log(data);
                       if(!data.error)
                         _this.permitList = [...data]
                       else
-                        alert(data.error);
+                        await dialog.alert(data.error);
                   })
-                  .catch(function (error) {
-                      alert(error);
+                  .catch(async function (error) {
+                      await dialog.alert(error);
                   })
           },
           toggleInput (id) {
@@ -153,7 +154,7 @@
                 this.webData.selected_category = this.webData.selected_category.filter(item => item.id !== id); // 移除目前id的輸入視窗
               }
           },
-          transmitt: function () {
+          transmitt: async function () {
               this.webData.website_sets.map((arr, index) => {
                   if(!arr.permit){  // 網站權限
                       this.webData.website_sets[index].pstatus = true;
@@ -189,7 +190,7 @@
                       this.select_flag = false ;             
               });
               if(this.flag || this.select_flag){
-                  alert("尚有欄位未填寫");
+                  await dialog.alert("尚有欄位未填寫");
                   return false;
               }                
               else {
@@ -202,7 +203,7 @@
                   })
                   .then(function (user) {
                       console.log(user);
-                      alert('傳輸成功');
+                      dialog.alert('傳輸成功');
                   })
                   .catch(function (error) {
                       
@@ -215,15 +216,15 @@
                     data: this.output
                   }
                 })
-                  .then(function (user) {
+                  .then(async function (user) {
                       console.log(user);
                       if(user.success)
-                        alert(user.success);
+                        await dialog.alert(user.success);
                       else
-                        alert(user.error);
+                        await dialog.alert(user.error);
                   })
-                  .catch(function (error) {
-                      alert(error);
+                  .catch(async function (error) {
+                      await dialog.alert(error);
                   })
                   
               }

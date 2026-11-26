@@ -104,9 +104,9 @@ export default {
         this.recipients = data.recipients; this.jobId = data.jobId; this.selected = []; this.error = '';
       } catch (error) { this.error = errorText(error, '無法讀取收件人清單。'); }
     },
-    next() {
-      if (this.topic === '') { alert('未輸入主題'); return; }
-      if (this.content === '') { alert('未輸入內容'); return; }
+    async next() {
+      if (this.topic === '') { await this.$dialog.alert('未輸入主題'); return; }
+      if (this.content === '') { await this.$dialog.alert('未輸入內容'); return; }
       this.step = 2; this.file = null; this.load();
     },
     toggleSort() { this.byLogin = !this.byLogin; this.result = null; this.file = null; this.load(); },
@@ -118,7 +118,7 @@ export default {
     },
     async send() {
       const chosen = this.recipients.filter(r => this.isChecked(r)).map(r => r.email);
-      if (!chosen.length) { alert('請選擇收件人'); return; }
+      if (!chosen.length) { await this.$dialog.alert('請選擇收件人'); return; }
       const data = new FormData();
       data.append('jobId', this.jobId);
       data.append('topic', this.topic);

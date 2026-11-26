@@ -1,3 +1,4 @@
+import { dialog } from '../shared/dialog';
 import Vue from 'vue'
 import mutations from './mutations'
 import { api2 } from '../assets/api.js'
@@ -75,9 +76,9 @@ export const action_web_insert  = ({ commit }, param) => {
     return new Promise((resolve, reject) => {
         if(param.data.urlShort != "")
         param.data.url = param.data.urlShort.includes("http") ? param.data.urlShort : (param.data.urlType + param.data.urlShort);
-        api2.web_insert(param,function(result){
+        api2.web_insert(param,async function(result){
             if(result.code != 'success'){
-                alert(result);
+                await dialog.alert(result);
             }
             resolve(result);
         }, false, function(error){                
@@ -87,9 +88,9 @@ export const action_web_insert  = ({ commit }, param) => {
 }
 export const action_vacancy_comfirm  = ({ commit }, param) => {
     return new Promise((resolve, reject) => {
-        api2.vacancy_comfirm(param,function(result){
+        api2.vacancy_comfirm(param,async function(result){
             if(result.code != 'success'){
-                alert(result);
+                await dialog.alert(result);
             }
             resolve(result);
         }, false, function(error){                
@@ -101,9 +102,9 @@ export const action_vacancy_insert  = ({ commit }, param) => {
     return new Promise((resolve, reject) => {
         if(param.data.urlShort != "")
         param.data.company_Website = param.data.urlShort.includes("http") ? param.data.urlShort : (param.data.urlType + param.data.urlShort);
-        api2.vacancy_insert(param,function(result){
+        api2.vacancy_insert(param,async function(result){
             if(result.code != 'success'){
-                alert(result);
+                await dialog.alert(result);
             }
             resolve(result);
         }, false, function(error){                
@@ -115,9 +116,9 @@ export const action_product_insert  = ({ commit }, param) => {
     return new Promise((resolve, reject) => {
         if(param.data.urlShort != "")
         param.data.url = param.data.urlShort.includes("http") ? param.data.urlShort : (param.data.urlType + param.data.urlShort);
-        api2.product_insert(param,function(result){
+        api2.product_insert(param,async function(result){
             if(result.code != 'success'){
-                alert(result);
+                await dialog.alert(result);
             }
             resolve(result);
         }, false, function(error){                
@@ -129,9 +130,9 @@ export const action_product_update  = ({ commit }, param) => {
     return new Promise((resolve, reject) => {
         if(param.data.urlShort != "")
         param.data.url = param.data.urlShort.includes("http") ? param.data.urlShort : (param.data.urlType + param.data.urlShort);
-        api2.product_update(param,function(result){
+        api2.product_update(param,async function(result){
             if(result.code != 'success'){
-                alert(result);
+                await dialog.alert(result);
             }
             resolve(result);
         }, false, function(error){                
@@ -143,9 +144,9 @@ export const action_vacancy_update  = ({ commit }, param) => {
     return new Promise((resolve, reject) => {
         if(param.data.urlShort != "")
         param.data.company_Website = param.data.urlShort.includes("http") ? param.data.urlShort : (param.data.urlType + param.data.urlShort);
-        api2.vacancy_update(param,function(result){
+        api2.vacancy_update(param,async function(result){
             if(result.code != 'success'){
-                alert(result);
+                await dialog.alert(result);
             }
             resolve(result);
         }, false, function(error){                
@@ -155,9 +156,9 @@ export const action_vacancy_update  = ({ commit }, param) => {
 }
 export const action_vacancy_delete  = ({ commit }, param) => {
     return new Promise((resolve, reject) => {
-        api2.vacancy_delete(param,function(result){
+        api2.vacancy_delete(param,async function(result){
             if(result.code != 'success'){
-                alert(result);
+                await dialog.alert(result);
             }
             resolve(result);
         }, false, function(error){                
@@ -167,9 +168,9 @@ export const action_vacancy_delete  = ({ commit }, param) => {
 }
 export const action_product_delete  = ({ commit }, param) => {
     return new Promise((resolve, reject) => {
-        api2.product_delete(param,function(result){
+        api2.product_delete(param,async function(result){
             if(result.code != 'success'){
-                alert(result);
+                await dialog.alert(result);
             }
             resolve(result);
         }, false, function(error){                
@@ -179,9 +180,9 @@ export const action_product_delete  = ({ commit }, param) => {
 }
 export const action_product_comfirm  = ({ commit }, param) => {
     return new Promise((resolve, reject) => {
-        api2.product_comfirm(param,function(result){
+        api2.product_comfirm(param,async function(result){
             if(result.code != 'success'){
-                alert(result);
+                await dialog.alert(result);
             }
             resolve(result);
         }, false, function(error){                
@@ -191,9 +192,9 @@ export const action_product_comfirm  = ({ commit }, param) => {
 }
 export const action_project_comfirm  = ({ commit }, param) => {
     return new Promise((resolve, reject) => {
-        api2.project_comfirm(param,function(result){
+        api2.project_comfirm(param,async function(result){
             if(result.code != 'success'){
-                alert(result);
+                await dialog.alert(result);
             }
             resolve(result);
         }, false, function(error){                
@@ -205,9 +206,9 @@ export const action_project_insert  = ({ commit }, param) => {
     return new Promise((resolve, reject) => {
         if(param.data.urlShort != "")
         param.data.company_Website = param.data.urlShort.includes("http") ? param.data.urlShort : (param.data.urlType + param.data.urlShort);
-        api2.project_insert(param,function(result){
+        api2.project_insert(param,async function(result){
             if(result.code != 'success'){
-                alert(result);
+                await dialog.alert(result);
             }
             resolve(result);
         }, false, function(error){                
@@ -219,9 +220,9 @@ export const action_project_update  = ({ commit }, param) => {
     return new Promise((resolve, reject) => {
         if(param.data.urlShort != "")
         param.data.company_Website = param.data.urlShort.includes("http") ? param.data.urlShort : (param.data.urlType + param.data.urlShort);
-        api2.project_update(param,function(result){
+        api2.project_update(param,async function(result){
             if(result.code != 'success'){
-                alert(result);
+                await dialog.alert(result);
             }
             resolve(result);
         }, false, function(error){                
@@ -231,9 +232,9 @@ export const action_project_update  = ({ commit }, param) => {
 }
 export const action_project_delete  = ({ commit }, param) => {
     return new Promise((resolve, reject) => {
-        api2.project_delete(param,function(result){
+        api2.project_delete(param,async function(result){
             if(result.code != 'success'){
-                alert(result);
+                await dialog.alert(result);
             }
             resolve(result);
         }, false, function(error){                
@@ -243,9 +244,9 @@ export const action_project_delete  = ({ commit }, param) => {
 }
 export const action_web_comfirm  = ({ commit }, param) => {
     return new Promise((resolve, reject) => {
-        api2.web_comfirm(param,function(result){
+        api2.web_comfirm(param,async function(result){
             if(result.code != 'success'){
-                alert(result);
+                await dialog.alert(result);
             }
             resolve(result);
         }, false, function(error){                
@@ -257,9 +258,9 @@ export const action_web_update  = ({ commit }, param) => {
     return new Promise((resolve, reject) => {
         if(param.data.urlShort != "")
             param.data.url = param.data.urlShort.includes("http") ? param.data.urlShort : (param.data.urlType + param.data.urlShort);
-        api2.web_update(param,function(result){
+        api2.web_update(param,async function(result){
             if(result.code != 'success'){
-                alert(result);
+                await dialog.alert(result);
             }
             resolve(result);
         }, false, function(error){                
@@ -269,9 +270,9 @@ export const action_web_update  = ({ commit }, param) => {
 }
 export const action_web_delete  = ({ commit }, param) => {
     return new Promise((resolve, reject) => {
-        api2.web_delete(param,function(result){
+        api2.web_delete(param,async function(result){
             if(result.code != 'success'){
-                alert(result);
+                await dialog.alert(result);
             }
             resolve(result);
         }, false, function(error){                
@@ -290,9 +291,9 @@ export const action_actionlog_get  = ({ commit }, param) => {
 }
 export const action_resume_insert  = ({ commit }, param) => {
     return new Promise((resolve, reject) => {
-        api2.resume_insert(param,function(result){
+        api2.resume_insert(param,async function(result){
             if(result.code != 'success'){
-                alert(result);
+                await dialog.alert(result);
             }
             resolve(result);
         }, false, function(error){                
@@ -302,9 +303,9 @@ export const action_resume_insert  = ({ commit }, param) => {
 }
 export const action_resume_update  = ({ commit }, param) => {
     return new Promise((resolve, reject) => {
-        api2.resume_update(param,function(result){
+        api2.resume_update(param,async function(result){
             if(result.code != 'success'){
-                alert(result);
+                await dialog.alert(result);
             }
             resolve(result);
         }, false, function(error){                

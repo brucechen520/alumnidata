@@ -122,10 +122,10 @@ export default {
       return text.split('{姓名}').join(this.sample.name).split('{畢業級別}').join(this.sample.level).split('{信箱}').join(this.sample.email);
     },
     isChecked(r) { return this.selected.indexOf(r.no) !== -1; },
-    next() {
-      if (this.topic.trim() === '') { alert('未輸入主旨'); return; }
-      if (this.content.trim() === '') { alert('未輸入內文'); return; }
-      if (this.unsupported.length) { alert('不支援的欄位：' + this.unsupported.join('、')); return; }
+    async next() {
+      if (this.topic.trim() === '') { await this.$dialog.alert('未輸入主旨'); return; }
+      if (this.content.trim() === '') { await this.$dialog.alert('未輸入內文'); return; }
+      if (this.unsupported.length) { await this.$dialog.alert('不支援的欄位：' + this.unsupported.join('、')); return; }
       this.step = 2;
       if (!this.recipients.length) this.load();
     },
@@ -146,8 +146,8 @@ export default {
       // 依清單順序送出會員序號；同一會員可能同時出現在學士與在職兩組，伺服器端會依信箱去重
       const ids = [];
       this.recipients.forEach(r => { if (this.isChecked(r) && ids.indexOf(r.id) === -1) ids.push(r.id); });
-      if (!ids.length) { alert('請選擇收件人'); return; }
-      if (this.file && this.file.size > MAX_BYTES) { alert('附件過大（上限 5 MB）。'); return; }
+      if (!ids.length) { await this.$dialog.alert('請選擇收件人'); return; }
+      if (this.file && this.file.size > MAX_BYTES) { await this.$dialog.alert('附件過大（上限 5 MB）。'); return; }
       const lines = [
         '主旨：' + this.topic,
         '收件人數：' + ids.length + ' 位',
@@ -156,7 +156,7 @@ export default {
         '',
         '建立後將由系統背景排程自動寄出，確定建立？'
       ];
-      if (!confirm(lines.join('\n'))) return;
+      if (!(await this.$dialog.confirm(lines.join('\n')))) return;
       const data = new FormData();
       data.append('jobKey', this.jobKey);
       data.append('topic', this.topic);
@@ -167,7 +167,7 @@ export default {
       try {
         const result = (await adminApi.mailJobCreate(data)).data;
         if (result.skipped && result.skipped.length) {
-          alert('以下 ' + result.skipped.length + ' 位信箱空白或格式錯誤，未加入任務：\n' + result.skipped.map(s => s.name + ' ' + s.email).join('\n'));
+          await this.$dialog.alert('以下 ' + result.skipped.length + ' 位信箱空白或格式錯誤，未加入任務：\n' + result.skipped.map(s => s.name + ' ' + s.email).join('\n'));
         }
         this.$router.push({ path: '/admin/mail-jobs/' + result.jobKey, query: { created: '1' } });
       } catch (error) {

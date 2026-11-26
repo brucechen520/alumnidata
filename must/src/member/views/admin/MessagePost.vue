@@ -30,7 +30,7 @@ export default {
         await adminApi.postMessage(this.topic, this.content);
         this.$router.push('/'); // 發文後回首頁公佈欄，與舊處理檔轉址到 main.php 相同
       } catch (error) {
-        alert(errorText(error, '發佈失敗，請稍後再試。'));
+        await this.$dialog.alert(errorText(error, '發佈失敗，請稍後再試。'));
       } finally { this.busy = false; }
     }
   }

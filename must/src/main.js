@@ -12,8 +12,10 @@ Vue.use(VModal, { dialog: true })
 import VueCookies from 'vue-cookies'
 Vue.use(VueCookies)
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
+import { install as installDialog } from './shared/dialog'
 // Install BootstrapVue
 Vue.use(BootstrapVue)
+Vue.use({ install: installDialog })
 //style
 import './assets/css/global.css'
 import 'bootstrap/dist/css/bootstrap.css'

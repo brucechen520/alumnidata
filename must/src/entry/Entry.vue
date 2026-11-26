@@ -148,11 +148,11 @@ export default {
     },
     async submit(call, success, onError) {
       this.error = ''; this.notice = ''; this.busy = true;
-      try { await ready(); await call(); success(); }
+      try { await ready(); await call(); await success(); }
       catch (error) {
         this.error = error.response && error.response.data && error.response.data.code === 'invalid_credentials'
           ? '登入帳號或密碼錯誤！' : errorMessage(error, '操作失敗，請稍後再試。');
-        if (onError) onError(this.error, error);
+        if (onError) await onError(this.error, error);
       }
       finally { this.busy = false; }
     },
@@ -165,15 +165,15 @@ export default {
     },
     reset() {
       if (!this.password || this.password !== this.passwordConfirm) { this.error = '密碼比對錯誤!'; return; }
-      this.submit(() => entryApi.reset(this.password, this.passwordConfirm), () => { alert('修改完成'); location.href = '/ee/main.php'; });
+      this.submit(() => entryApi.reset(this.password, this.passwordConfirm), async () => { await this.$dialog.alert('修改完成'); location.href = '/ee/main.php'; });
     },
     focusField(ref) {
       const field = this.$refs[ref];
       const target = Array.isArray(field) ? field[0] : field;
       if (target) target.focus();
     },
-    alertAt(message, ref) {
-      alert(message);
+    async alertAt(message, ref) {
+      await this.$dialog.alert(message);
       if (ref) this.focusField(ref);
       return false;
     },
@@ -218,8 +218,8 @@ export default {
       const missingList = this.listFields.find(item => !data[item.key][0].trim());
       if (missingList) return this.alertAt(missingList.label + '未填寫!', missingList.key);
       const payload = { ...data, Cadre: data.Cadre.concat(this.cadreOther ? [this.cadreOther] : []), Socie: data.Socie.concat(this.societyOther ? [this.societyOther] : []) };
-      this.submit(() => entryApi.register(payload), () => { alert('填寫成功!'); location.href = '/ee/'; }, (message, error) => {
-        alert(message);
+      this.submit(() => entryApi.register(payload), async () => { await this.$dialog.alert('填寫成功!'); location.href = '/ee/'; }, async (message, error) => {
+        await this.$dialog.alert(message);
         if (error.response && error.response.data && error.response.data.code === 'email_exists') this.focusField('email');
         if (error.response && error.response.data && error.response.data.code === 'bad_birth_date') this.focusField('birth');
       });
