@@ -1,18 +1,22 @@
 <template>
   <div v-if="shell" class="wa">
     <div class="head"></div>
-    <div id="nav1">
+    <div id="nav1" ref="nav">
       <ul class="menusm">
         <li v-for="(item, index) in menu" :key="index" :class="topClass(item, index)"
-            @mouseenter="hover = index" @mouseleave="hover = -1">
+            @mouseenter="enterMenu(index)" @mouseleave="leaveMenu(index)">
           <template v-if="item.separator"><img :src="'/ee/images/bb.png'"></template>
           <template v-else>
-            <router-link v-if="item.to" :to="item.to" :class="linkClass(index)" :title="item.title">{{ item.label }}</router-link>
-            <a v-else :href="item.href || ''" :class="linkClass(index)" :title="item.title" @click="open(item, $event)">{{ item.label }}</a>
-            <ul v-if="item.children" class="children" :style="{ display: hover === index ? 'block' : 'none' }">
+            <router-link v-if="item.to" :to="item.to" :class="linkClass(index)" :title="item.title" @click.native="closeMenu">{{ item.label }}</router-link>
+            <a v-else :href="item.href || ''" :class="linkClass(index)" :title="item.title"
+               :aria-haspopup="item.children ? 'true' : null"
+               :aria-expanded="item.children ? String(isMenuOpen(index)) : null"
+               @click="onTopClick(item, index, $event)">{{ item.label }}</a>
+            <ul v-if="item.children" class="children" :style="{ display: isMenuOpen(index) ? 'block' : 'none' }"
+                @mouseenter="enterMenu(index)" @mouseleave="leaveMenu(index)">
               <li v-for="(child, ci) in item.children" :key="ci" :class="{ ms_last: ci === item.children.length - 1, ms_first: ci === 0 }">
-                <router-link v-if="child.to" :to="child.to" :title="child.title" @click.native="hover = -1">{{ child.label }}</router-link>
-                <a v-else :href="child.href || ''" :title="child.title" @click="open(child, $event)">{{ child.label }}</a>
+                <router-link v-if="child.to" :to="child.to" :title="child.title" @click.native="closeMenu">{{ child.label }}</router-link>
+                <a v-else :href="child.href || ''" :title="child.title" @click="openChild(child, $event)">{{ child.label }}</a>
               </li>
             </ul>
           </template>
@@ -56,13 +60,14 @@ import { memberApi } from './api';
 import { errorText } from './util';
 
 const sep = { separator: true };
+const HOVER_CLOSE_DELAY_MS = 180;
 
 export default {
   data() {
     // 以動態樣式引用同源圖片，避免建置時被當成本機檔案解析
     const bg = file => 'url(/ee/images/' + file + ')';
     return {
-      shell: null, error: '', hover: -1,
+      shell: null, error: '', hover: -1, pinned: -1, closeTimer: null,
       bg: {
         main: { background: bg('bg04_16.jpg') + ' repeat-y' },
         left: { background: bg('22_08.jpg') + ' no-repeat' },
@@ -123,16 +128,79 @@ export default {
       this.error = errorText(error, '無法載入會員系統，請稍後再試。');
     }
   },
+  mounted() {
+    document.addEventListener('click', this.onDocumentClick);
+  },
+  beforeDestroy() {
+    this.clearCloseTimer();
+    document.removeEventListener('click', this.onDocumentClick);
+  },
   methods: {
+    isMenuOpen(index) {
+      return this.hover === index || this.pinned === index;
+    },
+    clearCloseTimer() {
+      if (this.closeTimer) {
+        clearTimeout(this.closeTimer);
+        this.closeTimer = null;
+      }
+    },
+    enterMenu(index) {
+      this.clearCloseTimer();
+      this.hover = index;
+      if (this.pinned !== -1 && this.pinned !== index) {
+        this.pinned = -1;
+      }
+    },
+    leaveMenu(index) {
+      this.clearCloseTimer();
+      this.closeTimer = setTimeout(() => {
+        if (this.hover === index) {
+          this.hover = -1;
+        }
+        this.closeTimer = null;
+      }, HOVER_CLOSE_DELAY_MS);
+    },
+    closeMenu() {
+      this.clearCloseTimer();
+      this.hover = -1;
+      this.pinned = -1;
+    },
+    onDocumentClick(event) {
+      if (this.hover === -1 && this.pinned === -1) return;
+      const nav = this.$refs.nav;
+      if (nav && !nav.contains(event.target)) {
+        this.closeMenu();
+      }
+    },
     topClass(item, index) {
       // 與舊選單的 menusm.js 相同：所有頂層 li（含分隔圖）都有 ms_top
       return {
-        ms_top: true, ms_havesubmenu: !!item.children, ms_hover: this.hover === index,
+        ms_top: true, ms_havesubmenu: !!item.children, ms_hover: this.isMenuOpen(index),
         ms_first: index === 0, ms_last: index === this.menu.length - 1
       };
     },
     linkClass(index) {
-      return { ms_top: true, ms_hover: this.hover === index };
+      return { ms_top: true, ms_hover: this.isMenuOpen(index) };
+    },
+    onTopClick(item, index, event) {
+      if (item.children) {
+        event.preventDefault();
+        this.clearCloseTimer();
+        if (this.pinned === index) {
+          this.pinned = -1;
+          this.hover = -1;
+        } else {
+          this.pinned = index;
+          this.hover = index;
+        }
+        return;
+      }
+      this.open(item, event);
+    },
+    openChild(child, event) {
+      this.closeMenu();
+      this.open(child, event);
     },
     open(item, event) {
       if (item.open) {
@@ -145,3 +213,21 @@ export default {
   }
 };
 </script>
+<style scoped>
+/* 確保載入 Bootstrap 4 border-box 後，頂部選單仍維持原 content-box 高度 (32px) 與無縫銜接 */
+#nav1,
+#nav1 * {
+  box-sizing: content-box;
+}
+#nav1 ul li a.ms_top {
+  line-height: 14px;
+}
+#nav1 ul li ul.children::before {
+  content: "";
+  position: absolute;
+  top: -8px;
+  left: 0;
+  right: 0;
+  height: 8px;
+}
+</style>
