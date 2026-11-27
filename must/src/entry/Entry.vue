@@ -62,7 +62,7 @@
         <h1>電機系系友資料表</h1>
         <form @submit.prevent="register">
           <fieldset><legend>帳號</legend>
-            <p><label>電子信箱: <input ref="email" v-model.trim="registration.Email" type="email" @input="emailStatus = ''" @blur="checkEmail"></label> *必填 <span role="status">{{ emailStatus }}</span></p>
+            <p><label>電子信箱: <input ref="email" v-model.trim="registration.Email" type="email" @input="emailStatus = ''" @blur="checkEmail"></label> *必填 <span role="status">{{ emailStatus }}</span><br>(請用私人常用email（公司的或學校的都不要用，以免日後收不到系統信件）)</p>
             <p><label>密碼: <input ref="pwd" v-model="registration.pwd" type="password"></label> *必填<br>(此新自訂密碼為登入本網站使用,非指原來您的郵件密碼)</p>
             <p><label>密碼確認: <input ref="pwd2" v-model="registration.pwd2" type="password"></label> *必填</p>
           </fieldset>
