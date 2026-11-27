@@ -15,6 +15,7 @@
       </p>
       <p>
         <input type="button" value="建立新寄信" @click="$router.push('/admin/mail-jobs/new')">
+        <input type="button" value="管理寄件範本" @click="$router.push('/admin/mail-templates')">
         <input type="button" value="重新整理" :disabled="busy" @click="load">
       </p>
       <table v-if="data.jobs.length" border="1" class="jobs">

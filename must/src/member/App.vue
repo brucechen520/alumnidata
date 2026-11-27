@@ -92,6 +92,7 @@ export default {
       const admin = [
         ['mail-single', '寄信件功能(單一)', '寄信件功能'], ['mail', '寄信件功能', '寄信件功能'],
         ['mail-jobs', '寄信功能', '寄信功能'],
+        ['mail-templates', '寄件範本', '寄件範本'],
         ['message-post', '公佈欄', '公佈欄'], ['confirm', '會員權限確認', '會員權限確認'],
         ['marquee', '跑馬燈', '跑馬燈'], ['change-log', '會員修改紀錄', '會員修改紀錄'],
         ['update-file', '發佈會務修改專區', '發佈會務修改專區'], ['sql-check', '資料庫檢查', '資料庫檢查']

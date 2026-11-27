@@ -4,7 +4,15 @@
     <form v-if="step === 1" @submit.prevent="next">
       <p><input type="button" value="返回寄件記錄" @click="$router.push('/admin/mail-jobs')"></p>
       <h3>建立新寄信　步驟一：撰寫信件</h3>
+      <p v-if="error" class="warn">{{ error }}</p>
       <table border="1" class="table">
+        <tr>
+          <td><p>套用範本</p></td>
+          <td><select v-model="selectedTemplateId" @change="applyTemplate">
+            <option value="">請選擇範本</option>
+            <option v-for="t in templates" :key="t.id" :value="String(t.id)">{{ t.name }}</option>
+          </select> <input type="button" value="管理範本" @click="$router.push('/admin/mail-templates')"></td>
+        </tr>
         <tr>
           <td><p>主旨</p></td>
           <td><input v-model="topic" type="text" size="80" maxlength="100"></td>
@@ -69,8 +77,9 @@
         <input type="button" value="清除" @click="selected = []">
         <input type="button" value="全選" @click="selected = recipients.filter(r => r.emailValid).map(r => r.no)">
         夾帶檔案（上限 5 MB）
-        <input ref="file" type="file" @change="file = $event.target.files[0] || null">
+        <input ref="file" type="file" @change="chooseFile">
       </p>
+      <p v-if="templateAttachment && !file">已帶入範本附件：{{ templateAttachment.name }} <input type="button" value="移除附件" @click="removeTemplateAttachment"></p>
       <p v-if="busy">建立中……</p>
     </div>
   </div>
@@ -87,7 +96,7 @@ export default {
   data() {
     return {
       step: 1, topic: '', content: '', recipients: [], jobKey: '', budget: null, queuedAhead: 0,
-      file: null, selected: [], byLogin: false, busy: false, error: '',
+      file: null, selected: [], byLogin: false, busy: false, error: '', templates: [], selectedTemplateId: '', appliedTemplateId: '', templateAttachment: null,
       placeholders: PLACEHOLDERS,
       sample: { name: '王小明', level: '大學100級/碩士102級', email: 'example@fcu.edu.tw' }
     };
@@ -115,6 +124,7 @@ export default {
       return e.today ? '預計今日內寄完' : '預計約 ' + e.days + ' 天寄完（含今天）';
     }
   },
+  created() { this.loadTemplates(); },
   methods: {
     date(ts) { return formatTime(ts).slice(0, 10); },
     time: formatTime,
@@ -122,6 +132,30 @@ export default {
       return text.split('{姓名}').join(this.sample.name).split('{畢業級別}').join(this.sample.level).split('{信箱}').join(this.sample.email);
     },
     isChecked(r) { return this.selected.indexOf(r.no) !== -1; },
+    async loadTemplates() {
+      try { this.templates = (await adminApi.mailTemplates()).data.templates; }
+      catch (error) { this.error = errorText(error, '無法讀取寄件範本。'); }
+    },
+    async applyTemplate() {
+      const id = this.selectedTemplateId;
+      if (!id) { this.templateAttachment = null; this.appliedTemplateId = ''; return; }
+      if ((this.topic || this.content) && !(await this.$dialog.confirm('將覆蓋目前輸入的主旨與內文，確定套用範本？'))) {
+        this.selectedTemplateId = this.appliedTemplateId; return;
+      }
+      try {
+        const t = (await adminApi.mailTemplate(id)).data;
+        this.topic = t.subject; this.content = t.body;
+        this.templateAttachment = { id: t.id, version: t.attachmentPath, name: t.attachmentName };
+        this.appliedTemplateId = id;
+        this.file = null; if (this.$refs.file) this.$refs.file.value = '';
+        this.error = '';
+      } catch (error) { this.selectedTemplateId = this.appliedTemplateId; this.error = errorText(error, '無法套用範本。'); }
+    },
+    chooseFile(event) {
+      this.file = event.target.files[0] || null;
+      if (this.file) { this.templateAttachment = null; this.selectedTemplateId = ''; this.appliedTemplateId = ''; }
+    },
+    removeTemplateAttachment() { this.templateAttachment = null; this.selectedTemplateId = ''; this.appliedTemplateId = ''; },
     async next() {
       if (this.topic.trim() === '') { await this.$dialog.alert('未輸入主旨'); return; }
       if (this.content.trim() === '') { await this.$dialog.alert('未輸入內文'); return; }
@@ -151,7 +185,7 @@ export default {
       const lines = [
         '主旨：' + this.topic,
         '收件人數：' + ids.length + ' 位',
-        '附件：' + (this.file ? this.file.name : '無'),
+        '附件：' + (this.file ? this.file.name : (this.templateAttachment ? this.templateAttachment.name || '無' : '無')),
         '預估：前方排隊 ' + this.queuedAhead + ' 位，' + this.estimateText,
         '',
         '建立後將由系統背景排程自動寄出，確定建立？'
@@ -163,6 +197,10 @@ export default {
       data.append('content', this.content);
       data.append('members', JSON.stringify(ids));
       if (this.file) data.append('uploaded_file', this.file);
+      if (this.templateAttachment) {
+        data.append('templateId', this.templateAttachment.id);
+        data.append('templateAttachment', this.templateAttachment.version);
+      }
       this.busy = true; this.error = '';
       try {
         const result = (await adminApi.mailJobCreate(data)).data;
@@ -171,6 +209,12 @@ export default {
         }
         this.$router.push({ path: '/admin/mail-jobs/' + result.jobKey, query: { created: '1' } });
       } catch (error) {
+        if (error.response && error.response.data && error.response.data.code === 'template_changed') {
+          this.step = 1; this.selectedTemplateId = ''; this.appliedTemplateId = ''; this.templateAttachment = null;
+          this.error = '範本附件已變更，請重新套用範本並再次確認。';
+          await this.loadTemplates();
+          return;
+        }
         // 同一個任務識別重送不會建立第二個任務；連線中斷時可直接再按一次
         this.error = errorText(error, '建立寄信任務失敗，請稍後再試（再按一次不會重複建立）。');
       } finally { this.busy = false; }

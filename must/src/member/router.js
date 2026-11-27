@@ -16,6 +16,7 @@ import MailGroup from './views/admin/MailGroup.vue';
 import MailJobs from './views/admin/MailJobs.vue';
 import MailJobNew from './views/admin/MailJobNew.vue';
 import MailJobDetail from './views/admin/MailJobDetail.vue';
+import MailTemplates from './views/admin/MailTemplates.vue';
 import MessagePost from './views/admin/MessagePost.vue';
 import ConfirmMembers from './views/admin/ConfirmMembers.vue';
 import MarqueeSet from './views/admin/MarqueeSet.vue';
@@ -48,6 +49,7 @@ export default new VueRouter({
         { path: 'mail-jobs', component: MailJobs },
         { path: 'mail-jobs/new', component: MailJobNew },
         { path: 'mail-jobs/:key', component: MailJobDetail },
+        { path: 'mail-templates', component: MailTemplates },
         { path: 'message-post', component: MessagePost },
         { path: 'confirm', component: ConfirmMembers },
         { path: 'marquee', component: MarqueeSet },
